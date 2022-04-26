@@ -102,9 +102,9 @@ const Formulario = () => {
             console.log(error)
         }
 
-        setModoEdicion(false)
-        setPersona(objetoPersona)
-        setError(null)
+        setModoEdicion(false);
+        setPersona(objetoPersona);
+        setError(null);
 
     }
 
