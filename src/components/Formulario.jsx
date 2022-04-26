@@ -6,10 +6,15 @@ import { nanoid } from 'nanoid';
 const Formulario = () => {
 
 
-    let foto = 'https://picsum.photos/100/100';
+    let foto = 'https://picsum.photos/100/100?image=';
+    const valor = () => {
+        
+        
+        return Math.floor(Math.random()*(599-100+1)+100)
+    }
 
     const objetoPersona = {
-        imagen: foto,
+        imagen: '',
         nombre: '',
         profesion: '',
         edad: '',
@@ -78,6 +83,7 @@ const Formulario = () => {
         try {
 
             const db = firebase.firestore();
+            persona.imagen = foto+valor();
             const nuevopersona = {
                 ...persona,
             }
@@ -230,7 +236,7 @@ const Formulario = () => {
                                 {
                                     lista.map((item) => (
                                         <tr key={item.id}>
-                                            <td><img className='' src={item.imagen} alt='imagen' /></td>
+                                            <td><img  src={item.imagen} alt='imagen' /></td>
                                             <td>{item.nombre}</td>
                                             <td>{item.profesion}</td>
                                             <td>{item.edad}</td>
