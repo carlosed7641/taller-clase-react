@@ -130,11 +130,9 @@ const Formulario = () => {
 
         const objetopersona = {
             nombre: item.nombre,
-            universidad: item.universidad,
-            carrera: item.carrera,
+            profesion: item.profesion,
             edad: item.edad,
             sexo: item.sexo,
-            correo: item.correo,
             telefono: item.telefono,
         }
 
@@ -152,13 +150,8 @@ const Formulario = () => {
             return
         }
 
-        if (!persona.universidad) {
-            setError('Campo universidad vacío');
-            return
-        }
-
-        if (!persona.carrera) {
-            setError('Campo carrera vacío');
+        if (!persona.profesion) {
+            setError('Campo profesión vacío');
             return
         }
 
@@ -169,11 +162,6 @@ const Formulario = () => {
 
         if (!persona.sexo) {
             setError('Campo sexo vacío');
-            return
-        }
-
-        if (!persona.correo) {
-            setError('Campo correo vacío');
             return
         }
 
