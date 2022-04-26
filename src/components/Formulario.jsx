@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 const Formulario = () => {
 
 
-    const foto = 'https://picsum.photos/200/300';
+    let foto = 'https://picsum.photos/100/100';
 
     const objetoPersona = {
         imagen: foto,
@@ -55,6 +55,97 @@ const Formulario = () => {
             return
         }
 
+        if (!persona.profesion) {
+            setError('Campo profesión vacío');
+            return
+        }
+
+        if (!persona.edad) {
+            setError('Campo edad vacío');
+            return
+        }
+
+        if (!persona.sexo) {
+            setError('Campo sexo vacío');
+            return
+        }
+
+        if (!persona.telefono) {
+            setError('Campo teléfono vacío');
+            return
+        }
+
+        try {
+
+            const db = firebase.firestore();
+            const nuevopersona = {
+                ...persona,
+            }
+
+            await db.collection('personas').add(nuevopersona);
+
+            setLista([...lista,
+            { id: nanoid(), ...persona }
+            ])
+
+        } catch (error) {
+            console.log(error)
+        }
+
+        setModoEdicion(false)
+        setPersona(objetoPersona)
+        setError(null)
+
+    }
+
+    const confirmarEliminar = (id) => {
+        let opcion = window.confirm('¿Está seguro que desea eliminar?')
+
+        if (!opcion) {
+        } else {
+
+            eliminar(id);
+        }
+
+    }
+
+    const eliminar = async (id) => {
+        try {
+            const db = firebase.firestore()
+            await db.collection('personas').doc(id).delete()
+            const aux = lista.filter(item => item.id !== id)
+            setLista(aux)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const auxEditar = (item) => {
+
+        const objetopersona = {
+            nombre: item.nombre,
+            universidad: item.universidad,
+            carrera: item.carrera,
+            edad: item.edad,
+            sexo: item.sexo,
+            correo: item.correo,
+            telefono: item.telefono,
+        }
+
+        setPersona(objetopersona);
+        setModoEdicion(true);
+        setId(item.id);
+
+    }
+
+    const editar = async e => {
+        e.preventDefault()
+
+        if (!persona.nombre) {
+            setError('Campo nombre vacío');
+            return
+        }
+
         if (!persona.universidad) {
             setError('Campo universidad vacío');
             return
@@ -87,33 +178,29 @@ const Formulario = () => {
 
         try {
 
-            const db = firebase.firestore();
-            const nuevopersona = {
-                ...persona,
-            }
 
-            await db.collection('personas').add(nuevopersona);
-
-            setLista([...lista,
-            { id: nanoid(), ...persona }
-            ])
+            const db = firebase.firestore()
+            await db.collection('personas').doc(id).update({
+                ...persona
+            })
 
         } catch (error) {
             console.log(error)
         }
 
-        setModoEdicion(false);
         setPersona(objetoPersona);
-        setError(null);
+        setModoEdicion(false)
+        setError(null)
 
     }
 
-   
 
+    const cancelar = () => {
 
-
-
-
+        setPersona(objetoPersona)
+        setModoEdicion(false)
+        setError(null)
+    }
 
 
 
@@ -184,7 +271,7 @@ const Formulario = () => {
                         <input
                             className='form-control mb-2'
                             type="text"
-                            placeholder='Ingrese Universidad'
+                            placeholder='Ingrese Profesión'
                             onChange={(e) => setPersona({ ...persona, profesion: e.target.value })}
                             value={persona.profesion}
                         />
@@ -192,7 +279,7 @@ const Formulario = () => {
                             className='form-control mb-2'
                             type="number"
                             min={0}
-                            placeholder='Ingrese Carrera'
+                            placeholder='Ingrese Edad'
                             onChange={(e) => setPersona({ ...persona, edad: e.target.value })}
                             value={persona.edad}
                         />
